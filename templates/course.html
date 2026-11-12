@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}{{ c.name }} · Al Rehman Islamic Academy{% endblock %}{% block desc %}{{ c.description[:150] or c.name }}{% endblock %}{% block body %}
+<header class="phead"><div class="w"><p class="eb">{{ CATS[c.category][0] if c.category in CATS else c.category }}</p><h1>{{ c.name }}</h1><p class="dur big">Recommended duration: {{ c.duration }}</p></div></header>
+<section class="sec ivory"><div class="w narrow detail">
+{% for t,v in [("About this course",c.description),("Syllabus",c.syllabus),("Learning objectives",c.objectives),("Eligibility",c.eligibility)] if v %}<h2>{{ t }}</h2><div class="pre">{{ v }}</div>{% endfor %}
+<a class="btn gold" href="{{ url_for('home', course=c.name) }}#contact">Enquire about this course</a></div></section>{% endblock %}

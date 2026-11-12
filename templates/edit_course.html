@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block body %}<section class="sec deep" style="padding-top:150px"><div class="w narrow"><h1>{{ c.name if c else 'New course' }}</h1>
+<form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf() }}">
+<label>Category<select name="category">{% for k,v in CATS.items() %}<option value="{{ k }}" {{ 'selected' if c and c.category==k }}>{{ v[0] }}</option>{% endfor %}</select></label>
+<label>Duration<input name="duration" required value="{{ c.duration if c }}"></label><label class="full">Course name<input name="name" required value="{{ c.name if c }}"></label>
+{% for f in ["description","syllabus","objectives","eligibility"] %}<label class="full">{{ f.title() }}<textarea name="{{ f }}" rows="5">{{ c[f] if c }}</textarea></label>{% endfor %}
+<label class="full"><span><input type="checkbox" name="featured" {{ 'checked' if c and c.featured }}> Featured on homepage</span></label><button class="btn gold full">Save</button></form></div></section>{% endblock %}

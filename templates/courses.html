@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Courses · Al Rehman Islamic Academy{% endblock %}{% block body %}
+<header class="phead"><div class="w"><p class="eb">Courses</p><h1>Our Courses</h1>
+<form class="filters" method="get"><input name="q" value="{{ q }}" placeholder="Search by course name" aria-label="Search courses">
+<select name="cat" aria-label="Category"><option value="">All categories</option>{% for k,v in CATS.items() %}<option value="{{ k }}" {{ 'selected' if cat==k }}>{{ v[0] }}</option>{% endfor %}</select><button class="btn gold sm">Search</button></form></div></header>
+<section class="sec ivory"><div class="w"><p>{{ rows|length }} course{{ '' if rows|length==1 else 's' }} found</p><div class="cards">{% for c in rows %}{% include "_card.html" %}{% else %}<p>No courses match your search.</p>{% endfor %}</div></div></section>{% endblock %}
