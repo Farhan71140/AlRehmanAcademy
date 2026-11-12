@@ -3,10 +3,11 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="public/static")
 app.config.update(SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
                   SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
-DB = os.path.join(app.root_path, "academy.db")
+ON_VERCEL = bool(os.environ.get("VERCEL"))
+DB = "/tmp/academy.db" if ON_VERCEL else os.path.join(app.root_path, "academy.db")
 CATS = {"male": ("Male Islamic Courses", "male-quran.webp", 24),
         "female": ("Female Islamic Courses", "female-quran.webp", 24),
         "kids": ("Kids Islamic Courses", "kids-learning.webp", 20),
