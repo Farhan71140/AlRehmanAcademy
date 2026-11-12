@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% block body %}
+{% macro img(n) %}{{ url_for('static', filename='images/' + n) }}{% endmacro %}
+<header class="hero" id="top"><div class="herobg" data-parallax style="background-image:url('{{ img('academy-hero.webp') }}')"></div><div class="shade"></div>
+<div class="w"><div class="hcopy"><p class="eb rv">{{ C.hero_sub }}</p><h1 class="rv" style="--d:.1s">{{ C.hero_title }}</h1><p class="lead rv" style="--d:.2s">{{ C.hero_text }}</p>
+<div class="cta rv" style="--d:.3s"><a class="btn gold" href="#categories">Explore Courses</a><a class="btn line" href="#contact">Apply for Admission</a></div></div></div></header>
+
+<section class="sec ivory" id="about"><div class="w split"><div class="reveal-img"><img src="{{ img('quran-study.webp') }}" alt="An open Quran on a wooden rehal" loading="lazy"></div>
+<div><p class="eb rv">About the Academy</p><h2 class="rv">A home for <em>serious learning.</em></h2><p class="rv">{{ C.about_text }}</p>
+<p class="rv">Four dedicated divisions serve men, women, children and working professionals, each with its own programmes and pace.</p></div></div></section>
+
+<section class="sec deep" id="categories"><div class="w"><p class="eb rv">Course Divisions</p><h2 class="rv">Four paths of <em>knowledge.</em></h2>
+<div class="cats">{% for k,v in CATS.items() %}<a class="cat rv" style="--d:{{ loop.index0 * 0.1 }}s" href="{{ url_for('courses', cat=k) }}"><img src="{{ img(v[1]) }}" alt="" loading="lazy">
+<div><span class="count">{{ counts.get(k, 0) }} courses</span><h3>{{ v[0] }}</h3><span class="more">View courses →</span></div></a>{% endfor %}</div></div></section>
+
+{% if feat %}<section class="sec ivory"><div class="w"><p class="eb rv">Featured</p><h2 class="rv">Featured <em>courses.</em></h2>
+<div class="cards">{% for c in feat %}{% include "_card.html" %}{% endfor %}</div></div></section>{% endif %}
+
+<section class="sec deep"><div class="w"><p class="eb rv">Why Al Rehman</p><h2 class="rv">Why choose <em>Al Rehman.</em></h2>
+<div class="why">{% for t,d in [("Structured programmes","Every course has a defined duration, syllabus and learning objectives."),("Dedicated divisions","Separate tracks for men, women, children and professionals."),("Clear admissions","A simple enquiry, a personal reply, and guidance on the right course."),("Flexible study","Tell us your learning preference when you apply.")] %}<div class="rv"><span class="n">0{{ loop.index }}</span><h3>{{ t }}</h3><p>{{ d }}</p></div>{% endfor %}</div></div></section>
+
+<section class="sec ivory"><div class="w"><p class="eb rv">Methodology</p><h2 class="rv">How we <em>teach.</em></h2>
+<ol class="meth">{% for t,d in [("Foundation","Begin with essential knowledge at your level."),("Study","Follow the course syllabus step by step."),("Practice","Apply what you learn with guidance."),("Progress","Move to the next course when ready.")] %}<li class="rv"><b>{{ t }}</b><span>{{ d }}</span></li>{% endfor %}</ol></div></section>
+
+<section class="sec deep" id="teachers"><div class="w split"><div class="reveal-img"><img src="{{ img('teacher-portrait.webp') }}" alt="Faculty portrait" loading="lazy"></div>
+<div><p class="eb rv">Our Teachers</p><h2 class="rv">Meet the <em>faculty.</em></h2><p class="rv">{{ C.faculty_text }}</p></div></div></section>
+
+<section class="sec ivory" id="admissions"><div class="w split"><div><p class="eb rv">Admissions</p><h2 class="rv">Your path to <em>enrolment.</em></h2>
+<ol class="steps">{% for t in ["Submit an enquiry","Receive guidance","Confirm your course","Begin learning"] %}<li class="rv"><span>{{ loop.index }}</span>{{ t }}</li>{% endfor %}</ol></div>
+<div class="reveal-img"><img src="{{ img('admission-study.webp') }}" alt="Desk with open Quran and writing materials" loading="lazy"></div></div></section>
+
+<section class="sec deep" id="faq"><div class="w narrow"><p class="eb rv">FAQ</p><h2 class="rv">Frequently asked <em>questions.</em></h2>
+{% for q,a in [("How do I apply?","Complete the enquiry form below. Our admissions team will reply to you."),("Can I choose my course?","Yes. Select a category and course in the form, or ask us for guidance."),("Are there courses for children?","Yes. The Kids Islamic Courses division is designed for young learners."),("How long are the courses?","Each course page shows its recommended duration.")] %}<details class="rv"><summary>{{ q }}</summary><p>{{ a }}</p></details>{% endfor %}</div></section>
+
+<section class="sec ivory" id="contact"><div class="w narrow"><p class="eb rv">Contact &amp; Enquiry</p><h2 class="rv">Begin your <em>enquiry.</em></h2>
+{% for m in get_flashed_messages() %}<div class="note" role="status">{{ m }}</div>{% endfor %}
+<form method="post" action="{{ url_for('enquire') }}" class="form"><input type="hidden" name="_csrf" value="{{ csrf() }}">
+<label>Full name<input name="name" required maxlength="120"></label><label>Email<input type="email" name="email" required></label>
+<label>Mobile / WhatsApp<input name="phone" required inputmode="tel"></label><label>Age<input type="number" name="age" min="3" max="99"></label>
+<label>Gender<select name="gender"><option>Male</option><option>Female</option></select></label>
+<label>Course category<select name="category">{% for k,v in CATS.items() %}<option value="{{ k }}">{{ v[0] }}</option>{% endfor %}</select></label>
+<label>Preferred course<input name="course" value="{{ request.args.get('course','') }}"></label>
+<label>Learning preference<select name="pref"><option>Online</option><option>In person</option><option>No preference</option></select></label>
+<label class="full">Additional message<textarea name="message" rows="4" maxlength="2000"></textarea></label>
+<button class="btn gold full" type="submit">Send Enquiry</button></form></div></section>{% endblock %}

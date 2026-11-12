@@ -1,0 +1,1 @@
+<a class="ccard rv" href="{{ url_for('course', cid=c.id) }}"><span class="eb2">{{ CATS[c.category][0] if c.category in CATS else c.category }}</span><h3>{{ c.name }}</h3><span class="dur">{{ c.duration }}</span></a>
