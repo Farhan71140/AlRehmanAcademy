@@ -18,9 +18,14 @@ if(dd){dd.firstElementChild.addEventListener('click',e=>{
   if(innerWidth>1100&&matchMedia('(hover:none)').matches&&!dd.classList.contains('open')){e.preventDefault();dd.classList.add('open')}});
   document.addEventListener('click',e=>{if(!dd.contains(e.target))dd.classList.remove('open')})}
 
-/* scroll reveal */
-const els=document.querySelectorAll('.rv,.reveal-img');
-if('IntersectionObserver'in window){
-  const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
-  els.forEach(e=>io.observe(e));
-}else els.forEach(e=>e.classList.add('on'));
+/* scroll reveal
+   Uses getBoundingClientRect instead of IntersectionObserver: Chrome/Edge on desktop treat an element hidden by
+   clip-path (the .reveal-img images) as "not visible", so the observer never fired and those images stayed hidden. */
+const els=[...document.querySelectorAll('.rv,.reveal-img')];
+let pending=els.slice(),queued=false;
+const reveal=()=>{queued=false;const h=innerHeight;
+  pending=pending.filter(e=>{const r=e.getBoundingClientRect();if(r.top<h*.92&&r.bottom>0){e.classList.add('on');return false}return true})};
+const queue=()=>{if(!queued&&pending.length){queued=true;requestAnimationFrame(reveal)}};
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);addEventListener('load',queue);
+reveal();
+setTimeout(()=>{pending.forEach(e=>{if(e.getBoundingClientRect().top<innerHeight*2)e.classList.add('on')})},4000); // safety net
