@@ -5,14 +5,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<nav id="nav"><div class="w"><a class="logo" href="{{ url_for('home') }}"><span class="ar">الرحمن</span>Al Rehman<small>Islamic Academy</small></a>
+<nav id="nav"><div class="w"><a class="logo" href="{{ url_for('home') }}" aria-label="Al Rehman Islamic Academy"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Al Rehman Islamic Academy" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()"><span class="logo-text"><span class="ar">الرحمن</span>Al Rehman<small>Islamic Academy</small></span></a>
 <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 <ul class="links"><li><a href="{{ url_for('home') }}#top">Home</a></li><li><a href="{{ url_for('home') }}#about">About Us</a></li>
 <li class="dd"><a href="{{ url_for('courses') }}">Courses</a><ul>{% for k,v in CATS.items() %}<li><a href="{{ url_for('courses', cat=k) }}">{{ v[0] }}</a></li>{% endfor %}</ul></li>
 <li><a href="{{ url_for('home') }}#teachers">Our Teachers</a></li><li><a href="{{ url_for('home') }}#admissions">Admissions</a></li>
 <li><a href="{{ url_for('home') }}#contact">Contact Us</a></li><li><a class="btn gold sm" href="{{ url_for('home') }}#contact">Enrol Now</a></li></ul></div></nav>
 <main id="main">{% block body %}{% endblock %}</main>
-<footer><div class="w fgrid"><div><div class="logo"><span class="ar">الرحمن</span>Al Rehman<small>Islamic Academy</small></div><p>{{ C.about_text }}</p></div>
+<footer><div class="w fgrid"><div><div class="logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Al Rehman Islamic Academy" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()"><span class="logo-text"><span class="ar">الرحمن</span>Al Rehman<small>Islamic Academy</small></span></div><p>{{ C.about_text }}</p></div>
 <div><h4>Courses</h4>{% for k,v in CATS.items() %}<a href="{{ url_for('courses', cat=k) }}">{{ v[0] }}</a>{% endfor %}</div>
 <div><h4>Academy</h4><a href="{{ url_for('home') }}#about">About</a><a href="{{ url_for('home') }}#admissions">Admissions</a><a href="{{ url_for('home') }}#faq">FAQ</a><a href="{{ url_for('home') }}#contact">Contact</a></div>
 <div><h4>Contact</h4>{% if C.contact_email %}<a href="mailto:{{ C.contact_email }}">{{ C.contact_email }}</a>{% endif %}{% if C.contact_phone %}<a href="tel:{{ C.contact_phone }}">{{ C.contact_phone }}</a>{% endif %}<a href="{{ url_for('login') }}">Staff login</a></div></div>

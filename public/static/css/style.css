@@ -97,20 +97,29 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
  .tbl form{flex-wrap:wrap}.tbl select{flex:1}.tbl form .btn{width:100%}
 }
 @media(max-width:520px){.fgrid{grid-template-columns:1fr}.copy{flex-direction:column}}
-@media(max-width:380px){.logo small{display:none}.logo{font-size:1.3rem}}
+@media(max-width:380px){.logo{font-size:1.3rem}}
 
-/* ================= Premium navigation ================= */
-nav,nav.s,nav.open{top:16px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;transition:top .4s var(--ease)}
-nav.s{top:10px}
-nav .w{position:relative;isolation:isolate;width:min(1280px,calc(100% - 40px));max-width:none;height:74px;padding:0 18px 0 30px;margin:0 auto}
-/* glass layer lives on a pseudo-element so the mobile menu (position:fixed) isn't trapped inside it */
-nav .w::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,28,24,.62),rgba(6,28,24,.46));
-  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(214,181,109,.3);
-  box-shadow:0 24px 60px -24px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.1);transition:background .4s,border-color .4s}
-nav .w::after{content:"";position:absolute;left:14%;right:14%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.9}
-nav.s .w::before,nav.open .w::before{background:rgba(6,28,24,.93);border-color:rgba(214,181,109,.42)}
+/* ================= Premium navigation (full-width) ================= */
+:root{--nav-h:76px;--logo-h:50px}
+@media(max-width:1100px){:root{--nav-h:64px;--logo-h:40px}}
 
+nav,nav.s,nav.open{top:0;padding-top:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+nav .w{position:relative;isolation:isolate;width:100%;max-width:none;margin:0;
+  height:calc(var(--nav-h) + env(safe-area-inset-top));padding:env(safe-area-inset-top) clamp(18px,3.2vw,56px) 0}
+/* glass layer on a pseudo-element so the mobile menu (position:fixed) isn't trapped inside it */
+nav .w::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,28,24,.7),rgba(6,28,24,.5));
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid rgba(214,181,109,.28);
+  box-shadow:0 18px 50px -26px rgba(0,0,0,.8);transition:background .4s,border-color .4s}
+nav .w::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent);opacity:.75}
+nav.s .w::before,nav.open .w::before{background:rgba(6,28,24,.94);border-bottom-color:rgba(214,181,109,.4)}
+
+/* Logo: your own image (logo.png) if present, otherwise the text logo */
 .logo{gap:11px;align-items:center}
+.logo-text{display:flex;align-items:center;gap:11px}
+.logo-img{display:none;height:var(--logo-h);width:auto;max-width:min(260px,56vw);object-fit:contain}
+.logo.has-img .logo-img{display:block}
+.logo.has-img .logo-text{display:none}
+footer .logo-img{height:56px}
 .logo .ar{font-size:1.65rem;line-height:1;text-shadow:0 0 18px rgba(214,181,109,.35)}
 .logo small{margin-left:3px;padding-left:14px;border-left:1px solid rgba(214,181,109,.45);line-height:1.35;color:var(--sage);font-size:.58rem;letter-spacing:.26em}
 
@@ -132,24 +141,22 @@ nav.s .w::before,nav.open .w::before{background:rgba(6,28,24,.93);border-color:r
   background:linear-gradient(135deg,#efd899,#d6b56d 50%,#b8964b);box-shadow:0 10px 26px -10px rgba(214,181,109,.75),inset 0 1px 0 rgba(255,255,255,.55)}
 .links .btn.gold:hover{background:linear-gradient(135deg,#f6e4b2,#e4c37d 50%,#c9a55a);transform:translateY(-2px);box-shadow:0 16px 32px -10px rgba(214,181,109,.9),inset 0 1px 0 rgba(255,255,255,.6)}
 
-.burger{display:none;place-content:center;gap:8px;width:48px;height:48px;padding:0;-webkit-tap-highlight-color:transparent}
+.burger{display:none;place-content:center;gap:8px;width:48px;height:48px;padding:0;margin-right:-8px;-webkit-tap-highlight-color:transparent}
 .burger i{width:26px;height:1.5px;margin:0;background:#fff;transition:transform .35s var(--ease),background .3s}
 .burger[aria-expanded=true] i{background:var(--gold)}
 .burger[aria-expanded=true] i:nth-child(1){transform:translateY(4.75px) rotate(45deg)}
 .burger[aria-expanded=true] i:nth-child(2){transform:translateY(-4.75px) rotate(-45deg)}
 
-@media(min-width:1101px) and (max-width:1239px){.logo small{display:none}}
+@media(min-width:1101px) and (max-width:1239px){nav .logo small{display:none}}
 
-/* Tablet + phone */
+/* Tablet + phone: menu drops down edge-to-edge under the bar */
 @media(max-width:1100px){
- nav,nav.s,nav.open{top:10px}
- nav .w{width:calc(100% - 24px);height:64px;padding:0 6px 0 20px}
  .burger{display:grid}
- .links{position:fixed;top:calc(10px + 64px + 8px + env(safe-area-inset-top));left:12px;right:12px;bottom:auto;inset-inline:12px;flex-direction:column;align-items:stretch;gap:0;
-  padding:6px 22px 24px;max-height:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-10px);font-size:1rem;letter-spacing:0;
-  background:rgba(6,28,24,.98);border:1px solid rgba(214,181,109,.35);box-shadow:0 30px 70px -20px rgba(0,0,0,.85);
+ .links{position:fixed;top:calc(var(--nav-h) + env(safe-area-inset-top));left:0;right:0;bottom:auto;flex-direction:column;align-items:stretch;gap:0;
+  padding:4px clamp(20px,5vw,40px) 24px;max-height:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-10px);font-size:1rem;letter-spacing:0;
+  background:rgba(6,28,24,.98);border-bottom:1px solid rgba(214,181,109,.35);box-shadow:0 40px 70px -30px rgba(0,0,0,.9);
   transition:max-height .5s var(--ease),opacity .3s,transform .5s var(--ease),visibility 0s .5s}
- nav.open .links{max-height:calc(100vh - 110px);max-height:calc(100dvh - 110px - env(safe-area-inset-top));opacity:1;visibility:visible;transform:none;overflow-y:auto;overscroll-behavior:contain;
+ nav.open .links{max-height:calc(100vh - var(--nav-h));max-height:calc(100dvh - var(--nav-h) - env(safe-area-inset-top));opacity:1;visibility:visible;transform:none;overflow-y:auto;overscroll-behavior:contain;
   padding-bottom:calc(24px + env(safe-area-inset-bottom));transition-delay:0s}
  .links>li>a:not(.btn){display:block;padding:15px 2px;font:500 1.45rem var(--serif);letter-spacing:0;border-bottom:1px solid rgba(214,181,109,.16)}
  .links>li>a:not(.btn)::after,.dd>a::before{display:none}
@@ -162,4 +169,4 @@ nav.s .w::before,nav.open .w::before{background:rgba(6,28,24,.93);border-color:r
  .links li:last-child{margin-top:22px}
  .links li:last-child .btn{width:100%;min-height:52px}
 }
-@media(max-width:560px){.logo small{display:none}.logo .ar{font-size:1.5rem}}
+@media(max-width:560px){nav .logo small{display:none}.logo .ar{font-size:1.5rem}}
