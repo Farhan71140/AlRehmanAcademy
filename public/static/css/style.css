@@ -96,7 +96,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
  .filters select,.filters .btn{width:100%}
  .tbl form{flex-wrap:wrap}.tbl select{flex:1}.tbl form .btn{width:100%}
 }
-@media(max-width:520px){.fgrid{grid-template-columns:1fr}.copy{flex-direction:column}}
+
 @media(max-width:380px){.logo{font-size:1.3rem}}
 
 /* ================= Premium navigation (full-width) ================= */
@@ -170,3 +170,20 @@ footer .logo-img{height:56px}
  .links li:last-child .btn{width:100%;min-height:52px}
 }
 @media(max-width:560px){nav .logo small{display:none}.logo .ar{font-size:1.5rem}}
+
+/* ================= Compact footer (tablet + phone) ================= */
+@media(max-width:820px){
+ footer{padding:48px 0 calc(22px + env(safe-area-inset-bottom));font-size:.88rem}
+ .fgrid{grid-template-columns:repeat(3,1fr);gap:30px 24px}
+ .fgrid>div:first-child{grid-column:1/-1}
+ .fgrid>div:first-child p{margin:12px 0 0;max-width:46ch;line-height:1.6}
+ footer h4{margin:0 0 10px}
+ footer a{margin-bottom:0;padding:5px 0;line-height:1.35}
+ .copy{margin-top:30px;padding-top:18px;font-size:.8rem;line-height:1.4}
+}
+@media(max-width:600px){
+ .fgrid{grid-template-columns:1fr 1fr;gap:26px 20px}
+ .fgrid>div:last-child{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px 22px;padding-top:20px;border-top:1px solid rgba(214,181,109,.15)}
+ .fgrid>div:last-child h4{width:100%;margin-bottom:6px}
+ .copy{flex-direction:row;justify-content:space-between;align-items:center;margin-top:24px}
+}
