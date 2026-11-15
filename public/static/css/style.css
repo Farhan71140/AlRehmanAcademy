@@ -100,8 +100,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 @media(max-width:380px){.logo{font-size:1.3rem}}
 
 /* ================= Premium navigation (full-width) ================= */
-:root{--nav-h:76px;--logo-h:50px}
-@media(max-width:1100px){:root{--nav-h:64px;--logo-h:40px}}
+:root{--nav-h:76px;--logo-h:54px}
+@media(max-width:1100px){:root{--nav-h:64px;--logo-h:42px}}
 
 nav,nav.s,nav.open{top:0;padding-top:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
 nav .w{position:relative;isolation:isolate;width:100%;max-width:none;margin:0;
@@ -187,3 +187,7 @@ footer .logo-img{height:56px}
  .fgrid>div:last-child h4{width:100%;margin-bottom:6px}
  .copy{flex-direction:row;justify-content:space-between;align-items:center;margin-top:24px}
 }
+
+/* Nav shows the logo image only */
+nav .logo-img{display:block;height:var(--logo-h);width:auto;max-width:min(280px,58vw);object-fit:contain}
+nav .logo{flex:none}
