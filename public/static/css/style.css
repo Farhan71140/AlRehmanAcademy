@@ -232,3 +232,34 @@ nav .logo{flex:none}
 .cbtn:hover{background:var(--gold);color:var(--mid)}
 .gnote{margin:22px 0 0;text-align:center;font-size:.85rem;max-width:70ch;margin-inline:auto}
 @media(max-width:600px){.gquote{font-size:1.2rem}.chip{flex:1 1 calc(33% - 10px);padding:0 10px}.gcard{padding:24px 22px}}
+
+
+/* ================= iOS Safari: hero must fill the screen behind the floating toolbar ================= */
+/* svh = smallest viewport (toolbar visible) -> on iPhone that leaves a strip of the next section showing. lvh fills it. */
+@supports (-webkit-touch-callout:none){
+ .hero{min-height:100vh;min-height:100lvh}
+ .hero .w{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
+}
+
+/* ================= Slimmer, more refined logo ================= */
+:root{--nav-h:68px;--logo-h:40px}
+@media(max-width:1100px){:root{--nav-h:58px;--logo-h:32px}}
+nav .logo-img{border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.55),0 8px 22px -8px rgba(0,0,0,.65);max-width:min(200px,46vw)}
+footer .logo-img{height:44px;border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.45)}
+.burger{width:44px;height:44px}
+
+/* ================= WhatsApp floating button ================= */
+.wa{position:fixed;z-index:40;right:max(18px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));
+ display:flex;align-items:center;gap:0;height:56px;min-width:56px;padding:0 15px;border-radius:999px;color:#fff;
+ background:linear-gradient(145deg,#2fe074,#1faa52 60%,#168a41);
+ box-shadow:0 0 0 1px rgba(214,181,109,.55),0 14px 32px -10px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.35);
+ -webkit-tap-highlight-color:transparent;transition:transform .4s var(--ease),box-shadow .4s,padding .4s var(--ease),gap .4s var(--ease)}
+.wa svg{width:26px;height:26px;flex:none}
+.wa-t{max-width:0;overflow:hidden;white-space:nowrap;font:600 .74rem var(--sans);letter-spacing:.14em;text-transform:uppercase;transition:max-width .5s var(--ease)}
+.wa::before{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(37,211,102,.7);animation:wapulse 2.8s ease-out infinite;pointer-events:none}
+@keyframes wapulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.45);opacity:0}}
+@media(hover:hover) and (min-width:901px){
+ .wa:hover{transform:translateY(-3px);padding:0 22px 0 17px;gap:10px;box-shadow:0 0 0 1px var(--gold),0 20px 40px -12px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.4)}
+ .wa:hover .wa-t{max-width:180px}
+}
+@media(max-width:600px){.wa{height:52px;min-width:52px;padding:0 13px;right:max(14px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom))}.wa svg{width:25px;height:25px}}
