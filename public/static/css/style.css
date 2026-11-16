@@ -274,3 +274,69 @@ footer .logo-img{height:56px;width:calc(56px * var(--logo-ratio));max-width:100%
 nav .w::before,nav.s .w::before,nav.open .w::before{background:#061C18;-webkit-backdrop-filter:none;backdrop-filter:none}
 .dd ul{background:#061C18;-webkit-backdrop-filter:none;backdrop-filter:none}
 @media(max-width:1100px){.links{background:#061C18}}
+
+/* ================= Ultra-premium nav finish (top + bottom gold framing) ================= */
+nav{--g1:#f6e4b2;--g2:#d6b56d;--g3:#b8964b}
+
+/* TOP: metallic gold rule with a slow light sweep, plus a fine second hairline (double-rule effect) */
+nav::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:3;pointer-events:none;
+  background:
+    linear-gradient(100deg,transparent 0,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%,transparent 100%) 0 0/250% 100% no-repeat,
+    linear-gradient(90deg,var(--g3),var(--g1) 18%,var(--g2) 50%,var(--g1) 82%,var(--g3));
+  box-shadow:0 0 18px rgba(214,181,109,.55),0 1px 0 rgba(0,0,0,.35);
+  animation:goldsweep 7s ease-in-out infinite}
+nav .w::after{height:1px;bottom:-1px;opacity:1;
+  background:linear-gradient(90deg,transparent,var(--g3) 12%,var(--g1) 50%,var(--g3) 88%,transparent);
+  box-shadow:0 0 14px rgba(214,181,109,.45)}
+/* fine inner hairline just under the top rule */
+nav .w::before{border-bottom:0;
+  background:
+    linear-gradient(90deg,transparent,rgba(214,181,109,.55) 20%,rgba(246,228,178,.8) 50%,rgba(214,181,109,.55) 80%,transparent) 0 4px/100% 1px no-repeat,
+    radial-gradient(120% 140% at 50% -40%,rgba(214,181,109,.16),transparent 60%),
+    linear-gradient(180deg,rgba(4,21,17,.82),rgba(6,28,24,.55));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 22px 50px -26px rgba(0,0,0,.85)}
+nav.s .w::before,nav.open .w::before{
+  background:
+    linear-gradient(90deg,transparent,rgba(214,181,109,.55) 20%,rgba(246,228,178,.8) 50%,rgba(214,181,109,.55) 80%,transparent) 0 4px/100% 1px no-repeat,
+    radial-gradient(120% 140% at 50% -40%,rgba(214,181,109,.12),transparent 60%),
+    rgba(4,21,17,.95)}
+/* nudge content so it sits optically centred between the two rules */
+nav .w{padding-top:calc(env(safe-area-inset-top) + 3px)}
+
+/* BOTTOM: centre diamond ornament on the gold line */
+nav .w>.logo{position:relative}
+nav::after{content:"";position:absolute;left:50%;bottom:-5px;width:9px;height:9px;z-index:4;pointer-events:none;
+  transform:translateX(-50%) rotate(45deg);
+  background:linear-gradient(135deg,var(--g1),var(--g3));
+  border:1px solid #061C18;outline:1px solid rgba(214,181,109,.6);outline-offset:2px;
+  box-shadow:0 0 14px rgba(214,181,109,.8)}
+nav.open::after{display:none}
+
+/* Links: gold gradient underline + soft glow on hover */
+.links>li>a:not(.btn)::after{height:1.5px;background:linear-gradient(90deg,var(--g3),var(--g1),var(--g3))}
+.links>li>a:not(.btn):hover{text-shadow:0 0 18px rgba(214,181,109,.55)}
+.links a.don{color:var(--g2)}
+.links a.don::before{content:"";display:inline-block;width:5px;height:5px;margin-right:8px;vertical-align:middle;
+  background:var(--g2);transform:rotate(45deg);box-shadow:0 0 8px rgba(214,181,109,.9)}
+
+/* Enrol button: glass-gold with light sweep */
+.links .btn.gold{position:relative;overflow:hidden;border-radius:2px;
+  box-shadow:0 10px 28px -10px rgba(214,181,109,.85),inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(120,90,30,.35)}
+.links .btn.gold::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);transition:left .7s var(--ease)}
+.links .btn.gold:hover::after{left:130%}
+
+/* Logo: faint gold halo so it lifts off the glass */
+nav .logo-img{filter:drop-shadow(0 2px 10px rgba(214,181,109,.25))}
+
+/* Dropdown: gold top rule + corner accent */
+.dd ul{border-top:2px solid var(--g2);box-shadow:0 34px 70px -20px rgba(0,0,0,.85),0 0 0 1px rgba(214,181,109,.12)}
+
+/* Mobile menu panel: matching gold edge */
+@media(max-width:1100px){
+ .links{border-bottom:0;box-shadow:0 40px 70px -30px rgba(0,0,0,.9),inset 0 -2px 0 var(--g2)}
+ nav::after{width:8px;height:8px}
+}
+
+@keyframes goldsweep{0%,55%{background-position:-150% 0,0 0}100%{background-position:250% 0,0 0}}
+@media(prefers-reduced-motion:reduce){nav::before{animation:none}.links .btn.gold::after{transition:none}}
