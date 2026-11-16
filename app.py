@@ -18,7 +18,11 @@ CONTENT = {
  "hero_text": "Explore structured Islamic educational programmes designed to nurture knowledge, strengthen faith and develop character across every generation.",
  "about_text": "Al Rehman Islamic Academy offers structured Islamic education for men, women, children and professionals.",
  "faculty_text": "Our faculty profiles are published here by the academy.",
- "contact_email": "", "contact_phone": ""}
+ "contact_email": "", "contact_phone": "",
+ "donate_intro": "Every contribution, big or small, is a seed of lasting reward. Choose a cause close to your heart and give with sincerity.",
+ "donate_upi": "", "donate_payee": "Al Rehman Islamic Academy",
+ "donate_bank_holder": "", "donate_bank_name": "", "donate_bank_account": "", "donate_bank_ifsc": "",
+ "donate_note": "Please mention your chosen cause when you donate, and contact us if you need a receipt or have any question about how your donation is used."}
 
 def db():
     if "db" not in g:
