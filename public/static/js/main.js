@@ -29,3 +29,17 @@ const queue=()=>{if(!queued&&pending.length){queued=true;requestAnimationFrame(r
 addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);addEventListener('load',queue);
 reveal();
 setTimeout(()=>{pending.forEach(e=>{if(e.getBoundingClientRect().top<innerHeight*2)e.classList.add('on')})},4000); // safety net
+
+/* donation: amount chips, UPI deep link, copy buttons */
+(()=>{const g=document.getElementById('donate');if(!g)return;
+ const chips=g.querySelectorAll('.chip'),amt=g.querySelector('#d-amt'),cause=g.querySelector('#d-cause'),go=g.querySelector('#d-go'),hint=g.querySelector('#d-hint');
+ chips.forEach(c=>c.addEventListener('click',()=>{chips.forEach(x=>x.classList.remove('sel'));c.classList.add('sel');amt.value=c.dataset.v}));
+ amt.addEventListener('input',()=>chips.forEach(x=>x.classList.toggle('sel',x.dataset.v===amt.value)));
+ if(go)go.addEventListener('click',()=>{const a=parseInt(amt.value,10);
+   if(!a||a<1){hint.textContent='Please choose or enter an amount first.';amt.focus();return}
+   const q=new URLSearchParams({pa:g.dataset.upi,pn:g.dataset.payee,am:String(a),cu:'INR',tn:'Donation - '+cause.value});
+   location.href='upi://pay?'+q.toString().replace(/\+/g,'%20');
+   setTimeout(()=>{hint.textContent='If nothing opened, you are on a computer: please scan the QR code or use the details alongside.'},1200)});
+ g.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+   try{await navigator.clipboard.writeText(b.dataset.copy);const t=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=t,1500)}catch(e){}}));
+})();

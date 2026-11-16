@@ -28,6 +28,48 @@
 <ol class="steps">{% for t in ["Submit an enquiry","Receive guidance","Confirm your course","Begin learning"] %}<li class="rv"><span>{{ loop.index }}</span>{{ t }}</li>{% endfor %}</ol></div>
 <div class="reveal-img"><img src="{{ img('admission-study.webp') }}" alt="Desk with open Quran and writing materials" loading="lazy"></div></div></section>
 
+<section class="sec give" id="donate" data-upi="{{ C.donate_upi }}" data-payee="{{ C.donate_payee }}"><div class="w">
+<div class="ghead"><div><p class="eb rv">Give &middot; Sadaqah &middot; Zakat</p><h2 class="rv">Give for the sake of <em>Allah.</em></h2><p class="rv" style="max-width:56ch">{{ C.donate_intro }}</p></div>
+<blockquote class="gquote rv">&ldquo;When a person dies, his deeds come to an end except three: ongoing charity, knowledge that benefits others, and a righteous child who prays for him.&rdquo;<cite>Sahih Muslim</cite></blockquote></div>
+
+<p class="eb rv" style="margin-top:64px">Where your donation goes</p>
+<div class="gcards">{% for t,d,p in [
+("Masjid Construction &amp; Care","Help build new masjids and keep existing ones thriving: prayer halls, wudu areas, lighting, carpets and everyday upkeep.","M3 21h18M5 21v-7h14v7M12 14c-3.2 0-5-2-5-4 0-2.2 3-3.4 5-7 2 3.600 5 4.800 5 7 0 2-1.800 4-5 4zM3 21V11M21 21V11"),
+("Feed the Hungry","Ration kits, hot meals and Ramadan iftar for families who struggle to put food on the table.","M3 12h18a9 9 0 0 1-18 0zM8 8c0-2 2-2 2-4M14 8c0-2 2-2 2-4"),
+("Orphans &amp; Widows","Stand beside orphaned children and widowed mothers with education, clothing and monthly care.","M12 20s-7-4.500-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.500-7 10-7 10z"),
+("Quran &amp; Islamic Education","Sponsor a student&rsquo;s course, support our teachers, and place Qurans and Islamic books in more hands.","M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2zM4 19V5M8 7h6"),
+("Zakat","Fulfil your annual obligation. Zakat is given to eligible recipients as laid down by Shariah.","M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8.500 8h7M8.500 11.500h7M10 8c4.500 0 4.500 5 0 5l4 4"),
+("Sadaqah Jariyah","Charity that keeps giving: water wells and hand pumps, Qurans, and lasting community projects.","M12 3s6 6.500 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11z"),
+("Medical &amp; Emergency Aid","Treatment costs for the sick, and urgent relief during floods, fires and other disasters.","M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"),
+("Qurbani &amp; Eid","Share the joy of Eid: Qurbani meat distribution and Eid gifts for families in need.","M20 14.500A8 8 0 1 1 9.500 4a6.500 6.500 0 0 0 10.500 10.500z")] %}
+<div class="gcard rv" style="--d:{{ (loop.index0 % 4) * 0.08 }}s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ p }}"/></svg><h3>{{ t|safe }}</h3><p>{{ d|safe }}</p></div>{% endfor %}</div>
+
+<div class="gpanel rv">
+<div class="gform"><h3>Make your donation</h3>
+<p class="gsub">1. Choose an amount</p>
+<div class="chips">{% for v in [500,1000,2500,5000,10000] %}<button type="button" class="chip" data-v="{{ v }}">&#8377;{{ '{:,}'.format(v) }}</button>{% endfor %}</div>
+<label style="margin-top:16px">Or enter your own amount (&#8377;)<input id="d-amt" type="number" inputmode="numeric" min="1" step="1" placeholder="e.g. 1500"></label>
+<p class="gsub" style="margin-top:22px">2. Choose a cause</p>
+<label><select id="d-cause"><option>Where it is needed most</option><option>Masjid Construction &amp; Care</option><option>Feed the Hungry</option><option>Orphans &amp; Widows</option><option>Quran &amp; Islamic Education</option><option>Zakat</option><option>Sadaqah Jariyah</option><option>Medical &amp; Emergency Aid</option><option>Qurbani &amp; Eid</option></select></label>
+{% if C.donate_upi %}<button type="button" id="d-go" class="btn gold full" style="margin-top:22px">Donate with UPI</button><p id="d-hint" class="ghint">UPI opens on your phone. On a computer, scan the QR code or use the details alongside.</p>
+{% else %}<a class="btn gold full" style="margin-top:22px" href="#contact">Contact us to donate</a><p class="ghint">Online payment details will be published here soon.</p>{% endif %}
+</div>
+
+<div class="gpay"><h3>Scan or transfer</h3>
+{% if C.donate_upi or C.donate_bank_account %}
+<div class="gqrwrap"><img class="gqr" src="{{ img('donation-qr.png') }}" alt="UPI QR code for donations" loading="lazy" onerror="this.parentNode.remove()"></div>
+{% if C.donate_upi %}<div class="krow"><div><small>UPI ID</small><b>{{ C.donate_upi }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_upi }}">Copy</button></div>{% endif %}
+{% if C.donate_bank_account %}
+{% if C.donate_bank_holder %}<div class="krow"><div><small>Account name</small><b>{{ C.donate_bank_holder }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_bank_holder }}">Copy</button></div>{% endif %}
+{% if C.donate_bank_name %}<div class="krow"><div><small>Bank</small><b>{{ C.donate_bank_name }}</b></div></div>{% endif %}
+<div class="krow"><div><small>Account number</small><b>{{ C.donate_bank_account }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_bank_account }}">Copy</button></div>
+{% if C.donate_bank_ifsc %}<div class="krow"><div><small>IFSC</small><b>{{ C.donate_bank_ifsc }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_bank_ifsc }}">Copy</button></div>{% endif %}
+{% endif %}
+{% else %}<p>Our UPI and bank details will appear here. Until then, please get in touch and we will guide you.</p><a class="btn line sm" href="#contact">Get in touch</a>{% endif %}
+</div></div>
+<p class="gnote rv">{{ C.donate_note }}</p>
+</div></section>
+
 <section class="sec deep" id="faq"><div class="w narrow"><p class="eb rv">FAQ</p><h2 class="rv">Frequently asked <em>questions.</em></h2>
 {% for q,a in [("How do I apply?","Complete the enquiry form below. Our admissions team will reply to you."),("Can I choose my course?","Yes. Select a category and course in the form, or ask us for guidance."),("Are there courses for children?","Yes. The Kids Islamic Courses division is designed for young learners."),("How long are the courses?","Each course page shows its recommended duration.")] %}<details class="rv"><summary>{{ q }}</summary><p>{{ a }}</p></details>{% endfor %}</div></section>
 

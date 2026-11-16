@@ -192,21 +192,43 @@ footer .logo-img{height:56px}
 nav .logo-img{display:block;height:var(--logo-h);width:auto;max-width:min(280px,58vw);object-fit:contain}
 nav .logo{flex:none}
 
-/* ================= WhatsApp floating button ================= */
-.wa{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;height:56px;min-width:56px;padding:0 20px 0 16px;border-radius:999px;background:#25D366;color:#fff;font:600 .9rem var(--sans);letter-spacing:.01em;box-shadow:0 8px 24px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .3s var(--ease),box-shadow .3s,background .3s}
-.wa svg{width:28px;height:28px;flex:none}
-.wa span{white-space:nowrap}
-.wa:hover{background:#1ebe5a;transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.34)}
-.wa:active{transform:scale(.96)}
-.wa:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.wa::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid #25D366;animation:wapulse 2.4s ease-out infinite;pointer-events:none}
-@keyframes wapulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.35,1.6);opacity:0}}
-/* tablet: slightly smaller pill */
-@media(max-width:1024px){.wa{height:52px;padding:0 18px 0 14px;font-size:.85rem}.wa svg{width:26px;height:26px}}
-/* phones: icon-only circle */
-@media(max-width:600px){.wa{width:56px;height:56px;padding:0;justify-content:center;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom))}.wa span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.wa::before{border-radius:50%}}
-@media(max-width:360px){.wa{width:52px;height:52px}}
-/* short landscape screens */
-@media(max-height:420px) and (orientation:landscape){.wa{height:44px;min-width:44px;width:auto;padding:0 14px 0 12px}.wa span{display:none}.wa svg{width:22px;height:22px}}
-@media print{.wa{display:none}}
-@media(prefers-reduced-motion:reduce){.wa::before{display:none}}
+/* ================= Donation section ================= */
+.links>li>a.don:not(.btn){color:var(--gold)}
+.give{position:relative;overflow:hidden;color:var(--sage);background:radial-gradient(ellipse at 12% 0,#14563f 0,#0b3328 42%,#061C18 100%)}
+.give::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 90% 8%,rgba(214,181,109,.14),transparent 38%),radial-gradient(circle at 5% 95%,rgba(214,181,109,.08),transparent 35%)}
+.give>.w{position:relative}
+.ghead{display:grid;gap:34px;align-items:end}
+@media(min-width:900px){.ghead{grid-template-columns:1.25fr 1fr;gap:70px}}
+.gquote{margin:0;padding:6px 0 6px 24px;border-left:2px solid var(--gold);font:italic 1.4rem/1.5 var(--serif);color:#fff}
+.gquote cite{display:block;margin-top:12px;font:600 .7rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-style:normal}
+.gcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:16px;margin-top:22px}
+.gcard{padding:30px 26px;border:1px solid rgba(214,181,109,.22);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));transition:transform .5s var(--ease),border-color .4s,background .4s}
+.gcard:hover{transform:translateY(-4px);border-color:var(--gold);background:rgba(214,181,109,.07)}
+.gcard svg{width:36px;height:36px;margin-bottom:20px;fill:none;stroke:var(--gold);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.gcard h3{font-size:1.5rem;margin-bottom:10px}
+.gcard p{margin:0;font-size:.93rem;line-height:1.65}
+.gpanel{display:grid;margin-top:46px;border:1px solid rgba(214,181,109,.32);background:rgba(4,21,17,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+@media(min-width:900px){.gpanel{grid-template-columns:1.1fr 1fr}.gpay{border-left:1px solid rgba(214,181,109,.25)}}
+.gform,.gpay{padding:clamp(24px,4vw,44px)}
+.gpay{border-top:1px solid rgba(214,181,109,.25)}
+@media(min-width:900px){.gpay{border-top:0}}
+.gform h3,.gpay h3{font-size:1.9rem;margin-bottom:18px}
+.gsub{margin:0 0 12px;font:600 .72rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{min-height:48px;padding:0 20px;border:1px solid rgba(214,181,109,.4);background:transparent;color:#fff;font:600 .95rem var(--sans);cursor:pointer;transition:.3s var(--ease);-webkit-tap-highlight-color:transparent}
+.chip:hover{border-color:var(--gold)}
+.chip.sel{background:var(--gold);color:var(--mid);border-color:var(--gold)}
+.give input,.give select{background:rgba(255,255,255,.06);border-color:rgba(214,181,109,.3);color:#fff}
+.give select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23D6B56D' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+.give select option{color:#000}
+.give input::placeholder{color:rgba(255,255,255,.4)}
+.ghint{margin:14px 0 0;font-size:.82rem;line-height:1.55;color:var(--sage)}
+.gqrwrap{display:grid;place-items:center;margin-bottom:10px}
+.gqr{width:min(210px,62%);aspect-ratio:1;object-fit:contain;background:#fff;padding:10px}
+.krow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid rgba(214,181,109,.16)}
+.krow small{display:block;margin-bottom:2px;font:600 .66rem var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.krow b{font-weight:500;color:#fff;overflow-wrap:anywhere}
+.cbtn{flex:none;min-height:38px;padding:0 14px;border:1px solid rgba(214,181,109,.45);background:none;color:var(--gold);font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:.3s}
+.cbtn:hover{background:var(--gold);color:var(--mid)}
+.gnote{margin:22px 0 0;text-align:center;font-size:.85rem;max-width:70ch;margin-inline:auto}
+@media(max-width:600px){.gquote{font-size:1.2rem}.chip{flex:1 1 calc(33% - 10px);padding:0 10px}.gcard{padding:24px 22px}}
