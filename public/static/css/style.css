@@ -241,12 +241,15 @@ nav .logo{flex:none}
  .hero .w{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
 }
 
-/* ================= Slimmer, more refined logo ================= */
-:root{--nav-h:68px;--logo-h:40px}
-@media(max-width:1100px){:root{--nav-h:58px;--logo-h:32px}}
-nav .logo-img{border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.55),0 8px 22px -8px rgba(0,0,0,.65);max-width:min(200px,46vw)}
-footer .logo-img{height:44px;border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.45)}
-.burger{width:44px;height:44px}
+/* ================= Refined logo: ORIGINAL height, narrower width ================= */
+/* Heights are unchanged (54px desktop / 42px tablet+phone, nav 76px / 64px). Only the width is reduced:
+   the image is cropped slightly at the left/right edges (empty white margin) instead of being squashed.
+   To make it narrower/wider, change --logo-ratio (width = height x ratio; original image is roughly 3.0). */
+:root{--nav-h:76px;--logo-h:54px;--logo-ratio:2.7}
+@media(max-width:1100px){:root{--nav-h:64px;--logo-h:42px}}
+nav .logo-img{height:var(--logo-h);width:calc(var(--logo-h) * var(--logo-ratio));max-width:none;object-fit:cover;object-position:center;
+ border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.55),0 8px 22px -8px rgba(0,0,0,.65)}
+footer .logo-img{height:56px;width:calc(56px * var(--logo-ratio));max-width:100%;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.45)}
 
 /* ================= WhatsApp floating button ================= */
 .wa{position:fixed;z-index:40;right:max(18px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));
