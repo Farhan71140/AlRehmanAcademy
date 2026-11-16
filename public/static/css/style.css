@@ -191,3 +191,22 @@ footer .logo-img{height:56px}
 /* Nav shows the logo image only */
 nav .logo-img{display:block;height:var(--logo-h);width:auto;max-width:min(280px,58vw);object-fit:contain}
 nav .logo{flex:none}
+
+/* ================= WhatsApp floating button ================= */
+.wa{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;height:56px;min-width:56px;padding:0 20px 0 16px;border-radius:999px;background:#25D366;color:#fff;font:600 .9rem var(--sans);letter-spacing:.01em;box-shadow:0 8px 24px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .3s var(--ease),box-shadow .3s,background .3s}
+.wa svg{width:28px;height:28px;flex:none}
+.wa span{white-space:nowrap}
+.wa:hover{background:#1ebe5a;transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.34)}
+.wa:active{transform:scale(.96)}
+.wa:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wa::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid #25D366;animation:wapulse 2.4s ease-out infinite;pointer-events:none}
+@keyframes wapulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.35,1.6);opacity:0}}
+/* tablet: slightly smaller pill */
+@media(max-width:1024px){.wa{height:52px;padding:0 18px 0 14px;font-size:.85rem}.wa svg{width:26px;height:26px}}
+/* phones: icon-only circle */
+@media(max-width:600px){.wa{width:56px;height:56px;padding:0;justify-content:center;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom))}.wa span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.wa::before{border-radius:50%}}
+@media(max-width:360px){.wa{width:52px;height:52px}}
+/* short landscape screens */
+@media(max-height:420px) and (orientation:landscape){.wa{height:44px;min-width:44px;width:auto;padding:0 14px 0 12px}.wa span{display:none}.wa svg{width:22px;height:22px}}
+@media print{.wa{display:none}}
+@media(prefers-reduced-motion:reduce){.wa::before{display:none}}
