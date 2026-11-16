@@ -241,14 +241,16 @@ nav .logo{flex:none}
  .hero .w{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
 }
 
-/* ================= Refined logo: ORIGINAL height, narrower width ================= */
-/* Heights are unchanged (54px desktop / 42px tablet+phone, nav 76px / 64px). Only the width is reduced:
-   the image is cropped slightly at the left/right edges (empty white margin) instead of being squashed.
-   To make it narrower/wider, change --logo-ratio (width = height x ratio; original image is roughly 3.0). */
-:root{--nav-h:76px;--logo-h:54px;--logo-ratio:2.7}
-@media(max-width:1100px){:root{--nav-h:64px;--logo-h:42px}}
-nav .logo-img{height:var(--logo-h);width:calc(var(--logo-h) * var(--logo-ratio));max-width:none;object-fit:cover;object-position:center;
- border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.55),0 8px 22px -8px rgba(0,0,0,.65)}
+/* ================= Logo flush with the navbar (no gap top/bottom) ================= */
+/* The navbar is now exactly as tall as the logo (--nav-h = --logo-h), so the logo fills the bar edge to edge vertically.
+   Width = height x --logo-ratio (smaller number = narrower logo). */
+:root{--logo-h:54px;--nav-h:54px;--logo-ratio:2.7}
+@media(max-width:1100px){:root{--logo-h:42px;--nav-h:42px}}
+nav .w{align-items:stretch}
+nav .logo{height:var(--logo-h);align-self:flex-end;display:flex;align-items:stretch;gap:0}
+nav .logo-img{display:block;height:100%;width:calc(var(--logo-h) * var(--logo-ratio));max-width:none;object-fit:cover;object-position:center;border-radius:0;box-shadow:none}
+nav .links{align-self:center}
+nav .burger{align-self:center;height:42px;width:44px}
 footer .logo-img{height:56px;width:calc(56px * var(--logo-ratio));max-width:100%;object-fit:cover;border-radius:3px;box-shadow:0 0 0 1px rgba(214,181,109,.45)}
 
 /* ================= WhatsApp floating button ================= */
