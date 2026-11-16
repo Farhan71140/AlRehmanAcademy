@@ -268,3 +268,9 @@ footer .logo-img{height:56px;width:calc(56px * var(--logo-ratio));max-width:100%
  .wa:hover .wa-t{max-width:180px}
 }
 @media(max-width:600px){.wa{height:52px;min-width:52px;padding:0 13px;right:max(14px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom))}.wa svg{width:25px;height:25px}}
+
+
+/* ================= Solid dark-green navbar (#061C18) ================= */
+nav .w::before,nav.s .w::before,nav.open .w::before{background:#061C18;-webkit-backdrop-filter:none;backdrop-filter:none}
+.dd ul{background:#061C18;-webkit-backdrop-filter:none;backdrop-filter:none}
+@media(max-width:1100px){.links{background:#061C18}}
