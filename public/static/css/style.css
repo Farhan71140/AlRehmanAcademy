@@ -322,3 +322,10 @@ nav .logo-img{filter:drop-shadow(0 2px 10px rgba(214,181,109,.25))}
  nav::after{width:8px;height:8px}
 }
 @media(prefers-reduced-motion:reduce){.links .btn.gold::after{transition:none}}
+
+/* ================= ARIA emblem logo (transparent PNG, ratio 1.75:1) ================= */
+:root{--logo-h:78px;--nav-h:calc(var(--logo-h) + 1px);--logo-ratio:1.75}
+@media(max-width:1100px){:root{--logo-h:60px;--nav-h:calc(var(--logo-h) + 1px)}}
+nav .logo{overflow:visible}
+nav .logo-img{object-fit:contain;object-position:left center;background:none}
+footer .logo-img{height:96px;width:calc(96px * var(--logo-ratio));object-fit:contain;border-radius:0;box-shadow:none}

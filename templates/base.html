@@ -10,7 +10,7 @@
 <ul class="links"><li><a href="{{ url_for('home') }}#top">Home</a></li><li><a href="{{ url_for('home') }}#about">About Us</a></li>
 <li class="dd"><a href="{{ url_for('courses') }}">Courses</a><ul>{% for k,v in CATS.items() %}<li><a href="{{ url_for('courses', cat=k) }}">{{ v[0] }}</a></li>{% endfor %}</ul></li>
 <li><a href="{{ url_for('home') }}#teachers">Our Teachers</a></li><li><a href="{{ url_for('home') }}#admissions">Admissions</a></li>
-<li><a class="don" href="{{ url_for('home') }}#donate">Donate</a></li><li><a href="{{ url_for('home') }}#contact">Contact Us</a></li><li><a class="btn gold sm" href="{{ url_for('home') }}#contact">Enrol Now</a></li></ul></div></nav>
+<li><a class="don" href="{{ url_for('home') }}#donate">Donate</a></li><li><a href="{{ url_for('home') }}#contact">Contact Us</a></li><li><a class="btn gold sm" href="{{ url_for('home') }}#contact">Enroll Now</a></li></ul></div></nav>
 <main id="main">{% block body %}{% endblock %}</main>
 <footer><div class="w fgrid"><div><div class="logo"><img class="logo-img" src="{{ url_for('static', filename='images/logo.png') }}" alt="Al Rehman Islamic Academy" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()"><span class="logo-text"><span class="ar">الرحمن</span>Al Rehman<small>Islamic Academy</small></span></div><p>{{ C.about_text }}</p></div>
 <div><h4>Courses</h4>{% for k,v in CATS.items() %}<a href="{{ url_for('courses', cat=k) }}">{{ v[0] }}</a>{% endfor %}</div>
