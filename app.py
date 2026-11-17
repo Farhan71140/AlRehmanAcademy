@@ -123,7 +123,11 @@ _cc = {"t": 0, "v": {}}
 def content():
     """Website text, cached for 20 seconds to save a database round-trip on every page."""
     if time.time() - _cc["t"] > 20:
-        _cc.update(v={r["k"]: r["v"] for r in many("SELECT k, v FROM content")}, t=time.time())
+        try:
+            _cc.update(v={r["k"]: r["v"] for r in many("SELECT k, v FROM content")}, t=time.time())
+        except Exception as e:  # DB problem: fall back to default text instead of crashing every page
+            print("content() failed:", e)
+            db().rollback()
     return {**CONTENT, **_cc["v"]}
 
 
@@ -189,6 +193,36 @@ def api_search():
     return jsonify(results=[dict(url=url_for("course", cid=r["id"]), name=r["name"], duration=r["duration"],
                                  cat=CATS[r["category"]][0] if r["category"] in CATS else r["category"])
                             for r in rows])
+
+
+@app.route("/health")
+def health():
+    """Temporary diagnostic page: open /health to see what is wrong. Delete this route when everything works."""
+    out = {"DATABASE_URL set": bool(DATABASE_URL), "SECRET_KEY set": bool(os.environ.get("SECRET_KEY")),
+           "ADMIN_PASSWORD set": bool(ADMIN_PASSWORD)}
+    if not DATABASE_URL:
+        out["fix"] = "Add DATABASE_URL under Vercel > Settings > Environment Variables, then redeploy."
+        return jsonify(out), 500
+    try:
+        c = connect()
+        with c.cursor() as cur:
+            cur.execute("SELECT to_regclass('public.courses') AS a, to_regclass('public.enquiries') AS b, to_regclass('public.content') AS c")
+            t = cur.fetchone()
+            out["connected"] = True
+            out["tables exist"] = {"courses": bool(t["a"]), "enquiries": bool(t["b"]), "content": bool(t["c"])}
+            if t["a"]:
+                cur.execute("SELECT COUNT(*) AS n FROM courses")
+                out["course rows"] = cur.fetchone()["n"]
+        c.close()
+        if not all(out["tables exist"].values()):
+            out["fix"] = "Run supabase_schema.sql in the Supabase SQL Editor."
+            return jsonify(out), 500
+    except Exception as e:
+        out["connected"] = False
+        out["error"] = type(e).__name__
+        out["detail"] = (str(e).strip().splitlines() or [""])[0][:220]
+        return jsonify(out), 500
+    return jsonify(out)
 
 
 @app.route("/enquire", methods=["POST"])
