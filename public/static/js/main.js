@@ -30,16 +30,22 @@ addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue)
 reveal();
 setTimeout(()=>{pending.forEach(e=>{if(e.getBoundingClientRect().top<innerHeight*2)e.classList.add('on')})},4000); // safety net
 
-/* donation: amount chips, UPI deep link, copy buttons */
+/* donation: amount chips (USD), payment link or WhatsApp, copy buttons */
 (()=>{const g=document.getElementById('donate');if(!g)return;
  const chips=g.querySelectorAll('.chip'),amt=g.querySelector('#d-amt'),cause=g.querySelector('#d-cause'),go=g.querySelector('#d-go'),hint=g.querySelector('#d-hint');
  chips.forEach(c=>c.addEventListener('click',()=>{chips.forEach(x=>x.classList.remove('sel'));c.classList.add('sel');amt.value=c.dataset.v}));
  amt.addEventListener('input',()=>chips.forEach(x=>x.classList.toggle('sel',x.dataset.v===amt.value)));
- if(go)go.addEventListener('click',()=>{const a=parseInt(amt.value,10);
-   if(!a||a<1){hint.textContent='Please choose or enter an amount first.';amt.focus();return}
-   const q=new URLSearchParams({pa:g.dataset.upi,pn:g.dataset.payee,am:String(a),cu:'INR',tn:'Donation - '+cause.value});
-   location.href='upi://pay?'+q.toString().replace(/\+/g,'%20');
-   setTimeout(()=>{hint.textContent='If nothing opened, you are on a computer: please scan the QR code or use the details alongside.'},1200)});
+ if(go)go.addEventListener('click',()=>{const a=Math.round(parseFloat(amt.value)*100)/100;
+   if(!(a>=1)){hint.textContent='Please choose or enter an amount first (minimum $1).';amt.focus();return}
+   const link=(g.dataset.link||'').trim();
+   if(/^https:\/\//i.test(link)){
+     window.open(link.replace('{amount}',a),'_blank','noopener');
+     hint.textContent='Opening our payment page. Please mention "'+cause.value+'" in the note if there is one.';
+   }else{
+     const t='Assalamu Alaikum, I would like to donate $'+a+' towards: '+cause.value+'. Please share the payment details.';
+     window.open('https://wa.me/923192788158?text='+encodeURIComponent(t),'_blank','noopener');
+     hint.textContent='Opening WhatsApp so we can send you the payment details.';
+   }});
  g.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
    try{await navigator.clipboard.writeText(b.dataset.copy);const t=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=t,1500)}catch(e){}}));
 })();

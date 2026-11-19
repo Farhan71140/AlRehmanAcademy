@@ -1,4 +1,5 @@
-import csv, os, secrets, time
+import csv, json, os, secrets, time
+import urllib.request
 from functools import wraps
 
 import psycopg2
@@ -23,6 +24,8 @@ app.config.update(
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")      # Supabase "Transaction pooler" URI
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")  # staff login password
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")      # key for the chat assistant (set on Vercel)
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 STATUSES = ["New", "Contacted", "Assessment", "Enrolled", "Declined"]
 
 CATS = {"male": ("Male Islamic Courses", "male-quran.webp", 24),
@@ -37,7 +40,7 @@ CONTENT = {
     "faculty_text": "Our faculty profiles are published here by the academy.",
     "contact_email": "", "contact_phone": "",
     "donate_intro": "Every contribution, big or small, is a seed of lasting reward. Choose a cause close to your heart and give with sincerity.",
-    "donate_upi": "", "donate_payee": "Al Rehman Islamic Academy",
+    "donate_link": "", "donate_upi": "", "donate_payee": "Al Rehman Islamic Academy",
     "donate_bank_holder": "", "donate_bank_name": "", "donate_bank_account": "", "donate_bank_ifsc": "",
     "donate_note": "Please mention your chosen cause when you donate, and contact us if you need a receipt or have any question about how your donation is used."}
 
@@ -144,8 +147,10 @@ def inject():
 
 @app.before_request
 def check_csrf():
-    if request.method == "POST" and request.form.get("_csrf") != session.get("_csrf"):
-        abort(400)
+    if request.method == "POST":
+        token = request.form.get("_csrf") or request.headers.get("X-CSRF-Token")
+        if not token or token != session.get("_csrf"):
+            abort(400)
 
 
 def admin_only(f):
@@ -193,6 +198,86 @@ def api_search():
     return jsonify(results=[dict(url=url_for("course", cid=r["id"]), name=r["name"], duration=r["duration"],
                                  cat=CATS[r["category"]][0] if r["category"] in CATS else r["category"])
                             for r in rows])
+
+
+# ---------------------------------------------------------------- AI chat assistant
+_cp = {"t": 0, "v": ""}
+_hits = {}
+
+
+def chat_prompt():
+    """System prompt for the chat assistant. The course list comes from the database, cached for 10 minutes."""
+    if time.time() - _cp["t"] > 600:
+        try:
+            groups = {}
+            for r in many("SELECT id, category, name, duration FROM courses ORDER BY name"):
+                groups.setdefault(r["category"], []).append(f"- {r['name']} ({r['duration']}) [/course/{r['id']}]")
+            _cp.update(t=time.time(), v="\n".join(f"{CATS[k][0]}:\n" + "\n".join(v) for k, v in groups.items() if k in CATS))
+        except Exception as e:
+            print("chat_prompt failed:", e)
+            db().rollback()
+    catalog = _cp["v"] or "(course list unavailable right now: send visitors to the Courses page)"
+    C = content()
+    phone = C.get("contact_phone") or "+92 319 2788158"
+    email = f", email {C['contact_email']}" if C.get("contact_email") else ""
+    divisions = ", ".join(v[0] for v in CATS.values())
+    return f"""You are the friendly website assistant for Al Rehman Islamic Academy, which offers structured Islamic education for men, women, children and professionals.
+
+You help visitors with: choosing a course, course durations and categories, how to apply, and how to donate.
+
+Academy facts:
+- Divisions: {divisions}.
+- Admissions: the visitor submits the enquiry form in the Contact section of the home page (/#contact). The admissions team replies personally and guides the choice of course. Learning preference can be online, in person or no preference.
+- Contact: phone and WhatsApp {phone}{email}.
+- Donations: the Donate section of the home page (/#donate). Visitors pick an amount in US dollars ($20, $50, $100, $150, $200, or their own amount) and a cause: masjid construction and care, feeding the hungry, orphans and widows, Quran and Islamic education, Zakat, Sadaqah Jariyah, medical and emergency aid, Qurbani and Eid.
+
+Course catalog (name, recommended duration, page link):
+{catalog}
+
+Rules:
+- Keep replies short: 2 to 5 lines. Warm and respectful. Plain text only, except links.
+- When you recommend a course, link it as [Course name](/course/ID) using exactly the link given in the catalog.
+- Use only the facts above. Never invent fees, schedules, start dates, teacher names or bank details. If something is not covered, say you do not have that detail and suggest the enquiry form or WhatsApp.
+- Do not give Islamic rulings (fatwas) or settle religious disputes. Say that is a question for the academy's teachers and offer the enquiry form or WhatsApp.
+- Stay on topic: the academy, its courses, admissions and donations. Politely decline anything unrelated.
+- Reply in the language the visitor writes in."""
+
+
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+    if not GROQ_API_KEY:
+        return jsonify(error="The assistant is not set up yet. Please use WhatsApp or the enquiry form."), 503
+    ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or request.remote_addr or "?"
+    now = time.time()
+    recent = [t for t in _hits.get(ip, []) if now - t < 60]
+    if len(recent) >= 10:
+        return jsonify(error="Too many messages. Please wait a minute and try again."), 429
+    if len(_hits) > 2000:
+        _hits.clear()
+    _hits[ip] = recent + [now]
+
+    msgs = []
+    for m in ((request.get_json(silent=True) or {}).get("messages") or [])[-10:]:
+        if isinstance(m, dict) and m.get("role") in ("user", "assistant") and isinstance(m.get("content"), str) and m["content"].strip():
+            msgs.append({"role": m["role"], "content": m["content"][:600]})
+    if not msgs or msgs[-1]["role"] != "user":
+        return jsonify(error="Please type a message."), 400
+
+    payload = {"model": GROQ_MODEL, "messages": [{"role": "system", "content": chat_prompt()}] + msgs,
+               "max_tokens": 700, "temperature": 0.5}
+    if GROQ_MODEL.startswith("openai/gpt-oss"):
+        payload["reasoning_effort"] = "low"  # keeps replies fast and stops the model spending all tokens on thinking
+    req = urllib.request.Request(
+        "https://api.groq.com/openai/v1/chat/completions", data=json.dumps(payload).encode(), method="POST",
+        headers={"Content-Type": "application/json", "Authorization": "Bearer " + GROQ_API_KEY,
+                 "User-Agent": "alrehman-site/1.0"})  # Groq's firewall rejects the default Python user agent
+    try:
+        with urllib.request.urlopen(req, timeout=9) as r:
+            reply = (json.load(r)["choices"][0]["message"].get("content") or "").strip()
+    except Exception as e:
+        print("chat failed:", type(e).__name__, str(e)[:200])
+        return jsonify(error="Sorry, I could not answer just now. Please try again, or message us on WhatsApp."), 502
+    return jsonify(reply=reply or "Sorry, I did not catch that. Could you rephrase your question?")
 
 
 @app.route("/health")
