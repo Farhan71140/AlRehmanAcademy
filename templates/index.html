@@ -28,7 +28,7 @@
 <ol class="steps">{% for t in ["Submit an enquiry","Receive guidance","Confirm your course","Begin learning"] %}<li class="rv"><span>{{ loop.index }}</span>{{ t }}</li>{% endfor %}</ol></div>
 <div class="reveal-img"><img src="{{ img('admission-study.webp') }}" alt="Desk with open Quran and writing materials" loading="lazy"></div></div></section>
 
-<section class="sec give" id="donate" data-upi="{{ C.donate_upi }}" data-payee="{{ C.donate_payee }}"><div class="w">
+<section class="sec give" id="donate" data-upi="{{ C.donate_upi }}" data-payee="{{ C.donate_payee }}" data-link="{{ C.donate_link }}"><div class="w">
 <div class="ghead"><div><p class="eb rv">Give &middot; Sadaqah &middot; Zakat</p><h2 class="rv">Give for the sake of <em>Allah.</em></h2><p class="rv" style="max-width:56ch">{{ C.donate_intro }}</p></div>
 <blockquote class="gquote rv">&ldquo;When a person dies, his deeds come to an end except three: ongoing charity, knowledge that benefits others, and a righteous child who prays for him.&rdquo;<cite>Sahih Muslim</cite></blockquote></div>
 
@@ -47,12 +47,11 @@
 <div class="gpanel rv">
 <div class="gform"><h3>Make your donation</h3>
 <p class="gsub">1. Choose an amount</p>
-<div class="chips">{% for v in [500,1000,2500,5000,10000] %}<button type="button" class="chip" data-v="{{ v }}">&#8377;{{ '{:,}'.format(v) }}</button>{% endfor %}</div>
-<label style="margin-top:16px">Or enter your own amount (&#8377;)<input id="d-amt" type="number" inputmode="numeric" min="1" step="1" placeholder="e.g. 1500"></label>
+<div class="chips">{% for v in [20,50,100,150,200] %}<button type="button" class="chip" data-v="{{ v }}">${{ v }}</button>{% endfor %}</div>
+<label style="margin-top:16px">Or enter your own amount (USD)<input id="d-amt" type="number" inputmode="numeric" min="1" step="any" placeholder="e.g. 75"></label>
 <p class="gsub" style="margin-top:22px">2. Choose a cause</p>
 <label><select id="d-cause"><option>Where it is needed most</option><option>Masjid Construction &amp; Care</option><option>Feed the Hungry</option><option>Orphans &amp; Widows</option><option>Quran &amp; Islamic Education</option><option>Zakat</option><option>Sadaqah Jariyah</option><option>Medical &amp; Emergency Aid</option><option>Qurbani &amp; Eid</option></select></label>
-{% if C.donate_upi %}<button type="button" id="d-go" class="btn gold full" style="margin-top:22px">Donate with UPI</button><p id="d-hint" class="ghint">UPI opens on your phone. On a computer, scan the QR code or use the details alongside.</p>
-{% else %}<a class="btn gold full" style="margin-top:22px" href="#contact">Contact us to donate</a><p class="ghint">Online payment details will be published here soon.</p>{% endif %}
+<button type="button" id="d-go" class="btn gold full" style="margin-top:22px">{{ 'Donate now' if C.donate_link else 'Donate via WhatsApp' }}</button><p id="d-hint" class="ghint">{{ 'You will be taken to our secure payment page.' if C.donate_link else 'We will reply on WhatsApp with the payment details.' }}</p>
 </div>
 
 <div class="gpay"><h3>Scan or transfer</h3>
@@ -65,7 +64,7 @@
 <div class="krow"><div><small>Account number</small><b>{{ C.donate_bank_account }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_bank_account }}">Copy</button></div>
 {% if C.donate_bank_ifsc %}<div class="krow"><div><small>IFSC</small><b>{{ C.donate_bank_ifsc }}</b></div><button type="button" class="cbtn" data-copy="{{ C.donate_bank_ifsc }}">Copy</button></div>{% endif %}
 {% endif %}
-{% else %}<p>Our UPI and bank details will appear here. Until then, please get in touch and we will guide you.</p><a class="btn line sm" href="#contact">Get in touch</a>{% endif %}
+{% else %}<p>Our payment details will appear here. Until then, please get in touch and we will guide you.</p><a class="btn line sm" href="#contact">Get in touch</a>{% endif %}
 </div></div>
 <p class="gnote rv">{{ C.donate_note }}</p>
 </div></section>
