@@ -94,3 +94,27 @@ setTimeout(()=>{pending.forEach(e=>{if(e.getBoundingClientRect().top<innerHeight
   if(e.key==='Escape'){setS(false);setC(false)}
   else if((e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();setS(true)}});
 })();
+
+/* course catalogue: division tabs, live filter, deep links (?cat=male or #cat-male) */
+(()=>{const root=document.getElementById('cg');if(!root)return;
+ const tabs=[...root.querySelectorAll('.cg-tab')],panels=[...root.querySelectorAll('.cg-panel')],q=document.getElementById('cg-q'),
+  empty=root.querySelector('.cg-empty'),note=document.getElementById('cg-note');
+ const n=p=>p.querySelectorAll('.cg-row:not([hidden])').length;
+ let cur=(tabs.find(t=>t.classList.contains('on'))||tabs[0]).dataset.cat;
+ const sel=(cat,focus)=>{cur=cat;
+  tabs.forEach(t=>{const o=t.dataset.cat===cat;t.classList.toggle('on',o);t.setAttribute('aria-selected',o);t.tabIndex=o?0:-1;if(o&&focus)t.focus()});
+  panels.forEach(p=>p.classList.toggle('on',p.dataset.cat===cat))};
+ const apply=()=>{const t=q.value.trim().toLowerCase();root.classList.toggle('cg-find',!!t);let total=0;
+  panels.forEach(p=>{p.querySelectorAll('.cg-row').forEach(r=>r.hidden=!!t&&!r.dataset.n.includes(t));
+   const c=n(p);p.hidden=!!t&&!c;if(t)total+=c;p.querySelector('.cg-badge b').textContent=c});
+  empty.hidden=!t||total>0;
+  note.hidden=!!t&&total===0;
+  note.textContent=t?total+(total===1?' course matches \u201C':' courses match \u201C')+q.value.trim()+'\u201D':n(panels.find(p=>p.dataset.cat===cur))+' courses available in this programme'};
+ tabs.forEach((t,i)=>{
+  t.addEventListener('click',()=>{q.value='';sel(t.dataset.cat);apply();history.replaceState(null,'','?cat='+t.dataset.cat)});
+  t.addEventListener('keydown',e=>{const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;e.preventDefault();
+   const x=tabs[(i+d+tabs.length)%tabs.length];sel(x.dataset.cat,true);apply()})});
+ q.addEventListener('input',apply);
+ const h=(location.hash.match(/^#cat-(\w+)/)||[])[1];if(h&&tabs.some(t=>t.dataset.cat===h))sel(h);
+ apply();
+})();

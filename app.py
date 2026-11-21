@@ -173,12 +173,11 @@ def home():
 @app.route("/courses")
 def courses():
     q, cat = request.args.get("q", "").strip()[:80], request.args.get("cat", "")
-    sql, args = "SELECT * FROM courses WHERE name ILIKE %s", [like(q)]
-    if cat in CATS:
-        sql += " AND category=%s"
-        args.append(cat)
-    rows = many(sql + " ORDER BY category, name", args)
-    return render_template("courses.html", rows=rows, q=q, cat=cat)
+    groups = {k: [] for k in CATS}  # catalogue order = the order courses were added (id)
+    for r in many("SELECT id, category, name, duration FROM courses ORDER BY id"):
+        if r["category"] in groups:
+            groups[r["category"]].append(r)
+    return render_template("courses.html", groups=groups, q=q, cat=cat)
 
 
 @app.route("/course/<int:cid>")
