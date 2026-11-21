@@ -1,5 +1,31 @@
-{% extends "base.html" %}{% block title %}Courses · Al Rehman Islamic Academy{% endblock %}{% block body %}
-<header class="phead"><div class="w"><p class="eb">Courses</p><h1>Our Courses</h1>
-<form class="filters" method="get"><input name="q" value="{{ q }}" placeholder="Search by course name" aria-label="Search courses">
-<select name="cat" aria-label="Category"><option value="">All categories</option>{% for k,v in CATS.items() %}<option value="{{ k }}" {{ 'selected' if cat==k }}>{{ v[0] }}</option>{% endfor %}</select><button class="btn gold sm">Search</button></form></div></header>
-<section class="sec ivory"><div class="w"><p>{{ rows|length }} course{{ '' if rows|length==1 else 's' }} found</p><div class="cards">{% for c in rows %}{% include "_card.html" %}{% else %}<p>No courses match your search.</p>{% endfor %}</div></div></section>{% endblock %}
+{% extends "base.html" %}{% block title %}Courses · Al Rehman Islamic Academy{% endblock %}{% block desc %}Browse our complete catalogue of Quran and Islamic studies programmes for men, women, children and professionals.{% endblock %}{% block body %}
+{% set info = {"male":("☽","Structured programmes for brothers of all ages and levels, from foundational Quran reading to advanced scholarly studies."),
+"female":("✦","Dedicated programmes for sisters, including courses tailored specifically to women's Islamic knowledge and practice."),
+"kids":("★","Fun, engaging and age-appropriate Islamic education for children, building a strong foundation in Quran, duas and Islamic values."),
+"professional":("◈","Advanced scholarly programmes for those seeking in-depth Islamic knowledge, certification, or a career in Islamic education.")} %}
+{% set first = cat if cat in CATS else 'male' %}
+<header class="phead cgh"><div class="w"><p class="eb">Courses</p><h1>Our <em>Courses</em></h1>
+<p class="cg-sub">A comprehensive range of Quranic and Islamic studies programmes for men, women, children and professionals, taught by qualified scholars online and in person.</p></div></header>
+
+<section class="sec ivory cg-fees"><div class="w"><div class="cg-head"><p class="eb">Transparent pricing</p><h2>Class <em>Fees</em></h2><p>All classes are conducted one-to-one or in small groups via live online sessions.</p></div>
+<div class="cg-price">{% for t,p in [("30 Minutes","$50"),("1 Hour","$100"),("2 Hours","$200")] %}<div class="cg-pc rv" style="--d:{{ loop.index0 * 0.1 }}s"><span>{{ t }}</span><b>{{ p }}</b><small>per session</small></div>{% endfor %}</div>
+<p class="cg-fn">All sessions are conducted live, one-to-one or in small groups. <a href="https://wa.me/923192788158" target="_blank" rel="noopener">WhatsApp us</a> to discuss a custom schedule.</p></div></section>
+<div class="cg-orn" aria-hidden="true"></div>
+
+<section class="sec cg-sec" id="catalogue"><div class="w">
+<div class="cg-head"><p class="eb">All programmes</p><h2>Course <em>Catalogue</em></h2><i class="cg-rule"></i></div>
+<div class="cg{{ ' cg-find' if q }}" id="cg"><script>document.getElementById('cg').classList.add('js')</script>
+<div class="cg-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="cg-q" type="search" value="{{ q }}" placeholder="Search all courses" maxlength="60" autocomplete="off" aria-label="Search all courses"></div>
+<div class="cg-tabs" role="tablist" aria-label="Course divisions">{% for k,v in CATS.items() %}<button type="button" role="tab" id="tab-{{ k }}" class="cg-tab{{ ' on' if k==first }}" data-cat="{{ k }}" aria-selected="{{ 'true' if k==first else 'false' }}" aria-controls="cat-{{ k }}"><span class="cg-ti" aria-hidden="true">{{ info[k][0] }}</span>{{ v[0] }}<em>{{ groups[k]|length }}</em></button>{% endfor %}</div>
+{% for k,v in CATS.items() %}<article class="cg-panel{{ ' on' if k==first }}" id="cat-{{ k }}" data-cat="{{ k }}" role="tabpanel" aria-labelledby="tab-{{ k }}">
+<div class="cg-ph"><span class="cg-ic" aria-hidden="true">{{ info[k][0] }}</span><div><h2>{{ v[0] }}</h2><p>{{ info[k][1] }}</p></div><div class="cg-badge"><b>{{ groups[k]|length }}</b><small>courses</small></div></div>
+<div class="cg-th"><span>Course name</span><span>Recommended duration</span></div>
+<div class="cg-body">{% for c in groups[k] %}<a class="cg-row" href="{{ url_for('course', cid=c.id) }}" data-n="{{ c.name|lower }}" style="--i:{{ [loop.index0,14]|min }}"><span class="cg-nm">{{ c.name }}</span><i class="cg-lead"></i><span class="cg-du">{{ c.duration }}</span><span class="cg-go" aria-hidden="true">→</span></a>{% endfor %}</div>
+</article>{% endfor %}
+<p class="cg-empty" hidden>No courses match your search. Try another word, or <a href="{{ url_for('home') }}#contact">ask our team</a>.</p>
+<p class="cg-note" id="cg-note" aria-live="polite">{{ groups[first]|length }} courses available in this programme</p>
+</div></div></section>
+<div class="cg-orn" aria-hidden="true"></div>
+
+<section class="sec deep cg-cta"><div class="w narrow"><i class="cg-rule"></i><h2>Ready to <em>Begin?</em></h2><p>Enrol today or get in touch to find the right course for you or your child.</p>
+<div class="cta" style="justify-content:center"><a class="btn gold" href="{{ url_for('home') }}#contact">Enquire Now</a><a class="btn line" href="https://wa.me/923192788158" target="_blank" rel="noopener">WhatsApp Us</a></div></div></section>{% endblock %}
